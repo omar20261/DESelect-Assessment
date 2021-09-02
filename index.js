@@ -2,8 +2,13 @@ require('dotenv').config()
 const express = require('express');
 const app = express();
 
-app.get('/',(req,res) => { res.send('<h1>Hello World</h1>') });
+/*----------mongoose---------*/
+const mongoose = require('mongoose');
+mongoose.connect(process.env.DB_host).connection;
 
+
+/*----------routes---------*/
+require('./App/routes')(app);
 
 
 /*---------- app listening  ---------*/

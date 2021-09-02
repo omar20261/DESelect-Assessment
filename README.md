@@ -5,12 +5,7 @@
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Run Project
 ```
 npm start
-```
-
-### Test
-```
-npm run test
 ```
