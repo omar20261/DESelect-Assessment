@@ -14,7 +14,7 @@ let StudentsArray = [
 /*================== ( Init Students ) ====================*/
 exports.InitStudents = (req,res)=>{
     Students.insertMany(StudentsArray,{},(err,doc)=>{
-        if(err){return res.json({Error: err});}
+        if(err){return res.status(400).json({Error: err});}
         res.json({message:'you have initiated successfully'})
     })
 }
@@ -22,17 +22,21 @@ exports.InitStudents = (req,res)=>{
 /*================== ( Add new Student ) ====================*/
 exports.AddStudent = (req,res)=>{
     let {id, firstName,lastName, age, nationality} = req.body;
+    if(!id||!firstName||!lastName||!age||!nationality){return res.status(400).json({Error:'Missing Info .. Please Add all student info'});}
     let newItem = new Students({id,firstName,lastName,age,nationality});
     newItem.save((err,doc)=>{
-        if(err){return res.json({Error: err});}
+        if(err){return res.status(400).json({Error: err});}
         res.json({message:'you have added a new student successfully',student: doc})
     })
 }
 
 /*================== ( get Students ) ====================*/
 exports.getStudents = (req,res)=>{
-    Students.find({},(err,docs)=>{
-        if(err){return res.json({Error: err});}
+    let op = {query:{},sort:{firstName:-1}}
+    if(req.query.nationality){op.query.nationality=req.query.nationality;}
+    if(req.query.sort){op.sort.firstName=req.query.sort=='ascending'?1:-1;}
+    Students.find(op.query).sort(op.sort).exec((err,docs)=>{
+        if(err){return res.status(400).json({Error: err});}
         res.json(docs)
     });
 }
